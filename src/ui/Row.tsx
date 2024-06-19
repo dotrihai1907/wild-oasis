@@ -11,7 +11,7 @@ const Row = styled.div<RowProps>`
     props.type === "horizontal" &&
     css`
       justify-content: space-between;
-      justify-content: center;
+      align-items: center;
     `}
 
   ${(props) =>
