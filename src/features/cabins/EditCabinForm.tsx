@@ -10,9 +10,10 @@ import { useEditCabin } from "./useEditCabin";
 
 type EditCabinFormProps = {
   editCabin: ICabin;
+  onClose?: () => void;
 };
 
-const EditCabinForm = ({ editCabin }: EditCabinFormProps) => {
+const EditCabinForm = ({ editCabin, onClose }: EditCabinFormProps) => {
   const { id, ...editValues } = editCabin;
 
   const { register, handleSubmit, getValues, formState } =
@@ -25,11 +26,16 @@ const EditCabinForm = ({ editCabin }: EditCabinFormProps) => {
   const { isEditing, editAction } = useEditCabin();
 
   const onSubmit = (data: ICreateCabin) => {
-    editAction({ newCabin: data, id });
+    editAction(
+      { newCabin: data, id },
+      {
+        onSuccess: () => onClose?.(),
+      }
+    );
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)} type="modal">
       <FormRow id="name" label="Cabin name" error={errors.name?.message}>
         <Input
           type="text"
@@ -117,7 +123,7 @@ const EditCabinForm = ({ editCabin }: EditCabinFormProps) => {
       </FormRow>
 
       <FormRow>
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" onClick={onClose}>
           Cancel
         </Button>
         <Button disabled={isEditing}>Edit cabin</Button>

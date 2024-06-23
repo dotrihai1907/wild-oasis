@@ -8,7 +8,11 @@ import Input from "../../ui/Input";
 import Textarea from "../../ui/Textarea";
 import { useCreateCabin } from "./useCreateCabin";
 
-const CreateCabinForm = () => {
+type CreateCabinFormProps = {
+  onClose?: () => void;
+};
+
+const CreateCabinForm = ({ onClose }: CreateCabinFormProps) => {
   const { register, handleSubmit, reset, getValues, formState } =
     useForm<ICreateCabin>();
 
@@ -20,12 +24,13 @@ const CreateCabinForm = () => {
     createAction(data, {
       onSuccess: () => {
         reset();
+        onClose?.();
       },
     });
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)} type="modal">
       <FormRow id="name" label="Cabin name" error={errors.name?.message}>
         <Input
           type="text"
@@ -115,10 +120,10 @@ const CreateCabinForm = () => {
       </FormRow>
 
       <FormRow>
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" onClick={onClose}>
           Cancel
         </Button>
-        <Button disabled={isCreating}>Add cabin</Button>
+        <Button disabled={isCreating}>Create new cabin</Button>
       </FormRow>
     </Form>
   );

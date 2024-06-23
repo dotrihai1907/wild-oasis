@@ -1,4 +1,84 @@
+import { createContext, useContext } from "react";
 import styled from "styled-components";
+import { ICabin } from "../services/apiModel";
+
+type TableContextType = {
+  columns: string;
+};
+
+type TableProps = {
+  children: React.ReactNode;
+  columns: string;
+};
+
+type HeaderRowProps = {
+  children: React.ReactNode;
+};
+
+type BodyProps<T> = {
+  data?: T[];
+  render: (value: T) => JSX.Element;
+};
+
+type CommonRowProps = {
+  columns: string;
+};
+
+const InitTableContext: TableContextType = {
+  columns: "",
+};
+
+const TableContext = createContext<TableContextType>(InitTableContext);
+
+const Table = ({ children, columns }: TableProps) => {
+  return (
+    <TableContext.Provider value={{ columns }}>
+      <StyledTable role="table">{children}</StyledTable>
+    </TableContext.Provider>
+  );
+};
+
+const Header = ({ children }: HeaderRowProps) => {
+  const { columns } = useContext(TableContext);
+  return (
+    <StyledHeader role="header" columns={columns} as="header">
+      {children}
+    </StyledHeader>
+  );
+};
+
+const Row = ({ children }: HeaderRowProps) => {
+  const { columns } = useContext(TableContext);
+  return (
+    <StyledRow role="row" columns={columns}>
+      {children}
+    </StyledRow>
+  );
+};
+
+const Body = ({ data, render }: BodyProps<ICabin>) => {
+  if (!data?.length) return <Empty children="No data to show at the moment" />;
+
+  return <StyledBody>{data.map(render)}</StyledBody>;
+};
+
+const Footer = styled.footer`
+  background-color: var(--color-grey-50);
+  display: flex;
+  justify-content: center;
+  padding: 1.2rem;
+
+  &:not(:has(*)) {
+    display: none;
+  }
+`;
+
+Table.Header = Header;
+Table.Body = Body;
+Table.Row = Row;
+Table.Footer = Footer;
+
+export default Table;
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -9,7 +89,7 @@ const StyledTable = styled.div`
   overflow: hidden;
 `;
 
-const CommonRow = styled.div`
+const CommonRow = styled.div<CommonRowProps>`
   display: grid;
   grid-template-columns: ${(props) => props.columns};
   column-gap: 2.4rem;
@@ -38,18 +118,6 @@ const StyledRow = styled(CommonRow)`
 
 const StyledBody = styled.section`
   margin: 0.4rem 0;
-`;
-
-const Footer = styled.footer`
-  background-color: var(--color-grey-50);
-  display: flex;
-  justify-content: center;
-  padding: 1.2rem;
-
-  /* This will hide the footer when it contains no child elements. Possible thanks to the parent selector :has 🎉 */
-  &:not(:has(*)) {
-    display: none;
-  }
 `;
 
 const Empty = styled.p`

@@ -2,6 +2,41 @@ import styled from "styled-components";
 import Button from "./Button";
 import Heading from "./Heading";
 
+type ConfirmDeleteProps = {
+  disabled: boolean;
+  resourceName: string;
+  onConfirm: () => void;
+  onClose?: () => void;
+};
+
+const ConfirmDelete = ({
+  resourceName,
+  onConfirm,
+  disabled,
+  onClose,
+}: ConfirmDeleteProps) => {
+  return (
+    <StyledConfirmDelete>
+      <Heading as="h3">Delete {resourceName}</Heading>
+      <p>
+        Are you sure you want to delete this {resourceName} permanently? This
+        action cannot be undone.
+      </p>
+
+      <div>
+        <Button variation="secondary" disabled={disabled} onClick={onClose}>
+          Cancel
+        </Button>
+        <Button variation="danger" disabled={disabled} onClick={onConfirm}>
+          Delete
+        </Button>
+      </div>
+    </StyledConfirmDelete>
+  );
+};
+
+export default ConfirmDelete;
+
 const StyledConfirmDelete = styled.div`
   width: 40rem;
   display: flex;
@@ -19,26 +54,3 @@ const StyledConfirmDelete = styled.div`
     gap: 1.2rem;
   }
 `;
-
-function ConfirmDelete({ resourceName, onConfirm, disabled }) {
-  return (
-    <StyledConfirmDelete>
-      <Heading as="h3">Delete {resourceName}</Heading>
-      <p>
-        Are you sure you want to delete this {resourceName} permanently? This
-        action cannot be undone.
-      </p>
-
-      <div>
-        <Button variation="secondary" disabled={disabled}>
-          Cancel
-        </Button>
-        <Button variation="danger" disabled={disabled}>
-          Delete
-        </Button>
-      </div>
-    </StyledConfirmDelete>
-  );
-}
-
-export default ConfirmDelete;

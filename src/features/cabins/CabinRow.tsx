@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import styled from "styled-components";
 import { ICabin } from "../../services/apiModel";
-import Button from "../../ui/Button";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import Menus from "../../ui/Menus";
+import Modal from "../../ui/Modal";
+import Table from "../../ui/Table";
 import { formatCurrency } from "../../utils/helpers";
 import EditCabinForm from "./EditCabinForm";
-import { useDeleteCabin } from "./useDeleteCabin";
-import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import { useCreateCabin } from "./useCreateCabin";
+import { useDeleteCabin } from "./useDeleteCabin";
 
 type CabinRowType = {
   cabin: ICabin;
@@ -24,9 +26,7 @@ const CabinRow = ({ cabin }: CabinRowType) => {
   } = cabin;
 
   const { isDeleting, deleteAction } = useDeleteCabin();
-  const { isCreating, createAction } = useCreateCabin();
-
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const { createAction } = useCreateCabin();
 
   const handleDuplicate = () => {
     createAction({
@@ -40,51 +40,54 @@ const CabinRow = ({ cabin }: CabinRowType) => {
   };
 
   return (
-    <>
-      <TableRow role="row">
-        <Image src={image || undefined} />
-        <Cabin>{name}</Cabin>
-        <div>Fits up to {maxCapacity} guests</div>
-        <Price>{formatCurrency(regularPrice)}</Price>
-        {discount ? (
-          <Discount>{formatCurrency(discount)}</Discount>
-        ) : (
-          <Discount>&mdash;</Discount>
-        )}
-        <Action>
-          <Button size="small" disabled={isCreating} onClick={handleDuplicate}>
-            <HiSquare2Stack />
-          </Button>
-          <Button size="small" onClick={() => setIsEdit((cur) => !cur)}>
-            <HiPencil />
-          </Button>
-          <Button
-            size="small"
-            disabled={isDeleting}
-            onClick={() => deleteAction(cabinId)}
-          >
-            <HiTrash />
-          </Button>
-        </Action>
-      </TableRow>
-      {isEdit && <EditCabinForm editCabin={cabin} />}
-    </>
+    <Table.Row>
+      <Image src={image || undefined} />
+      <Cabin>{name}</Cabin>
+      <div>Fits up to {maxCapacity} guests</div>
+      <Price>{formatCurrency(regularPrice)}</Price>
+      {discount ? (
+        <Discount>{formatCurrency(discount)}</Discount>
+      ) : (
+        <Discount>&mdash;</Discount>
+      )}
+
+      <Action>
+        <Modal>
+          <Menus.Menu>
+            <Menus.Toogle id={cabinId} />
+            <Menus.List id={cabinId}>
+              <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
+                Duplicate
+              </Menus.Button>
+
+              <Modal.Open opens="edit">
+                <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
+              </Modal.Open>
+
+              <Modal.Open opens="delete">
+                <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+              </Modal.Open>
+            </Menus.List>
+
+            <Modal.Window name="edit">
+              <EditCabinForm editCabin={cabin} />
+            </Modal.Window>
+
+            <Modal.Window name="delete">
+              <ConfirmDelete
+                resourceName={`cabin ${name}`}
+                disabled={isDeleting}
+                onConfirm={() => deleteAction(cabinId)}
+              />
+            </Modal.Window>
+          </Menus.Menu>
+        </Modal>
+      </Action>
+    </Table.Row>
   );
 };
 
 export default CabinRow;
-
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem;
-  align-items: center;
-  padding: 1.4rem 2.4rem;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-`;
 
 const Image = styled.img`
   display: block;
@@ -113,9 +116,4 @@ const Discount = styled.div`
   color: var(--color-green-700);
 `;
 
-const Action = styled.div`
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-  align-items: center;
-`;
+const Action = styled.div``;
