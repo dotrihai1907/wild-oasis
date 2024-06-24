@@ -1,7 +1,35 @@
 import { getToday } from "../utils/helpers";
+import { IBooking } from "./apiModel";
 import supabase from "./supabase";
 
-export async function getBooking(id) {
+type BookingProps = {
+  filter: {
+    field: string;
+    value: string;
+  } | null;
+  sortBy: {
+    field: string;
+    direction: string;
+  };
+};
+
+export const getBookings = async ({ filter, sortBy }: BookingProps) => {
+  let query = supabase
+    .from("bookings")
+    .select("*,  cabins(name), guests(fullName, email)");
+
+  if (filter) query = query.eq(filter.field, filter.value);
+
+  query = query.order(sortBy.field, { ascending: sortBy.direction === "asc" });
+
+  const { data, error } = await query;
+
+  if (error) throw new Error("Bookings could  not be loaded");
+
+  return data as IBooking[];
+};
+
+export const getBooking = async (id: number) => {
   const { data, error } = await supabase
     .from("bookings")
     .select("*, cabins(*), guests(*)")
@@ -14,10 +42,9 @@ export async function getBooking(id) {
   }
 
   return data;
-}
+};
 
-// Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
-export async function getBookingsAfterDate(date) {
+export async function getBookingsAfterDate(date: string) {
   const { data, error } = await supabase
     .from("bookings")
     .select("created_at, totalPrice, extrasPrice")
@@ -33,7 +60,7 @@ export async function getBookingsAfterDate(date) {
 }
 
 // Returns all STAYS that are were created after the given date
-export async function getStaysAfterDate(date) {
+export async function getStaysAfterDate(date: string) {
   const { data, error } = await supabase
     .from("bookings")
     // .select('*')

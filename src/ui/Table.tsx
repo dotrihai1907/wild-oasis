@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext } from "react";
 import styled from "styled-components";
-import { ICabin } from "../services/apiModel";
 
 type TableContextType = {
   columns: string;
@@ -15,9 +15,9 @@ type HeaderRowProps = {
   children: React.ReactNode;
 };
 
-type BodyProps<T> = {
-  data?: T[];
-  render: (value: T) => JSX.Element;
+type BodyProps = {
+  data?: any[];
+  render: (value: any) => JSX.Element;
 };
 
 type CommonRowProps = {
@@ -56,7 +56,7 @@ const Row = ({ children }: HeaderRowProps) => {
   );
 };
 
-const Body = ({ data, render }: BodyProps<ICabin>) => {
+const Body = ({ data, render }: BodyProps) => {
   if (!data?.length) return <Empty children="No data to show at the moment" />;
 
   return <StyledBody>{data.map(render)}</StyledBody>;

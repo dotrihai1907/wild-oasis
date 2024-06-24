@@ -6,12 +6,13 @@ import Spinner from "../../ui/Spinner";
 import Table from "../../ui/Table";
 import CabinRow from "./CabinRow";
 import { useCabins } from "./useCabins";
+import Empty from "../../ui/Empty";
 
 const CabinTable = () => {
   const { isLoading, cabins } = useCabins();
   const [searchParams] = useSearchParams();
 
-  const filterValue = searchParams.get("discount") ?? "all";
+  const filterValue = searchParams.get("discount") || "all";
 
   const filteredCabins = useMemo(() => {
     if (filterValue === "all") return cabins;
@@ -21,7 +22,7 @@ const CabinTable = () => {
       return cabins?.filter((cabin) => cabin.discount > 0);
   }, [cabins, filterValue]);
 
-  const sortBy = searchParams.get("sortBy") ?? "name-asc";
+  const sortBy = searchParams.get("sortBy") || "name-asc";
   const [field, direction] = sortBy.split("-");
   const modifier = direction === "asc" ? 1 : -1;
   const sortedCabins = useMemo(
@@ -33,6 +34,7 @@ const CabinTable = () => {
   );
 
   if (isLoading) return <Spinner />;
+  if (!cabins?.length) return <Empty resourceName="cabins" />;
 
   return (
     <Menus>

@@ -26,3 +26,32 @@ export interface ISettings {
 export interface IUpdateSetting {
   [key: string]: string;
 }
+
+export interface IBookingCabin {
+  name: string;
+}
+
+export interface IBookingGuest {
+  email: string;
+  fullName: string;
+}
+
+export interface IBooking {
+  id: number;
+  createdAt: string;
+  startDate: string;
+  endDate: string;
+  numNights: number;
+  numGuests: number;
+  cabinPrice: number;
+  extraPrice: number;
+  totalPrice: number;
+  status: "unconfirmed" | "checked-in" | "checked-out";
+  hasBreakfast: boolean;
+  isPaid: boolean;
+  observations: string;
+  cabinId: number;
+  guestId: number;
+  cabins: IBookingCabin;
+  guests: IBookingGuest;
+}
