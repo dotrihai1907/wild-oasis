@@ -1,10 +1,11 @@
+import { get } from "lodash";
+import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Menus from "../../ui/Menus";
 import Spinner from "../../ui/Spinner";
 import Table from "../../ui/Table";
 import CabinRow from "./CabinRow";
 import { useCabins } from "./useCabins";
-import { useMemo } from "react";
 
 const CabinTable = () => {
   const { isLoading, cabins } = useCabins();
@@ -19,6 +20,17 @@ const CabinTable = () => {
     if (filterValue === "with-discount")
       return cabins?.filter((cabin) => cabin.discount > 0);
   }, [cabins, filterValue]);
+
+  const sortBy = searchParams.get("sortBy") ?? "name-asc";
+  const [field, direction] = sortBy.split("-");
+  const modifier = direction === "asc" ? 1 : -1;
+  const sortedCabins = useMemo(
+    () =>
+      filteredCabins?.sort(
+        (a, b) => (get(a, field) - get(b, field)) * modifier
+      ),
+    [field, filteredCabins, modifier]
+  );
 
   if (isLoading) return <Spinner />;
 
@@ -35,7 +47,7 @@ const CabinTable = () => {
         </Table.Header>
 
         <Table.Body
-          data={filteredCabins}
+          data={sortedCabins}
           render={(cabin) => <CabinRow key={cabin.id} cabin={cabin} />}
         />
       </Table>
