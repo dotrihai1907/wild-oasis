@@ -1,5 +1,6 @@
+import { ROW_PER_PAGE } from "../utils/constants";
 import { getToday } from "../utils/helpers";
-import { IBooking } from "./apiModel";
+import { IGetBookings } from "./apiModel";
 import supabase from "./supabase";
 
 type BookingProps = {
@@ -11,22 +12,32 @@ type BookingProps = {
     field: string;
     direction: string;
   };
+  page: number;
 };
 
-export const getBookings = async ({ filter, sortBy }: BookingProps) => {
+export const getBookings = async ({ filter, sortBy, page }: BookingProps) => {
   let query = supabase
     .from("bookings")
-    .select("*,  cabins(name), guests(fullName, email)");
+    .select("*,  cabins(name), guests(fullName, email)", {
+      count: "exact",
+    });
 
   if (filter) query = query.eq(filter.field, filter.value);
 
-  query = query.order(sortBy.field, { ascending: sortBy.direction === "asc" });
+  const from = (page - 1) * ROW_PER_PAGE;
+  const to = from + ROW_PER_PAGE - 1;
 
-  const { data, error } = await query;
+  console.log(from, to, page);
+
+  query = query
+    .order(sortBy.field, { ascending: sortBy.direction === "asc" })
+    .range(from, to);
+
+  const { data, error, count } = await query;
 
   if (error) throw new Error("Bookings could  not be loaded");
 
-  return data as IBooking[];
+  return { data, count } as IGetBookings;
 };
 
 export const getBooking = async (id: number) => {

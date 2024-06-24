@@ -1,4 +1,71 @@
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import { useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import { ROW_PER_PAGE } from "../utils/constants";
+
+type PaginationButtonProps = {
+  active: boolean;
+};
+
+type PaginationProps = {
+  count: number;
+};
+
+const Pagination = ({ count }: PaginationProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const pageCount = Math.ceil(count / ROW_PER_PAGE);
+
+  const currentPage = !searchParams.get("page")
+    ? 1
+    : Number(searchParams.get("page"));
+
+  const nextPage = () => {
+    const next = currentPage + 1;
+    searchParams.set("page", next.toString());
+    setSearchParams(searchParams);
+  };
+
+  const prevPage = () => {
+    const prev = currentPage - 1;
+    searchParams.set("page", prev.toString());
+    setSearchParams(searchParams);
+  };
+
+  if (pageCount <= 1) return null;
+
+  return (
+    <StyledPagination>
+      <P>
+        Showing <span>{(currentPage - 1) * ROW_PER_PAGE + 1}</span> to{" "}
+        <span>
+          {currentPage === pageCount ? count : currentPage * ROW_PER_PAGE}
+        </span>{" "}
+        of <span>{count}</span> results
+      </P>
+
+      <Buttons>
+        <PaginationButton
+          disabled={currentPage === 1}
+          active
+          onClick={prevPage}
+        >
+          <HiChevronLeft /> <span>Previous</span>
+        </PaginationButton>
+
+        <PaginationButton
+          disabled={currentPage === pageCount}
+          active
+          onClick={nextPage}
+        >
+          <HiChevronRight /> <span>Next</span>
+        </PaginationButton>
+      </Buttons>
+    </StyledPagination>
+  );
+};
+
+export default Pagination;
 
 const StyledPagination = styled.div`
   width: 100%;
@@ -21,7 +88,7 @@ const Buttons = styled.div`
   gap: 0.6rem;
 `;
 
-const PaginationButton = styled.button`
+const PaginationButton = styled.button<PaginationButtonProps>`
   background-color: ${(props) =>
     props.active ? " var(--color-brand-600)" : "var(--color-grey-50)"};
   color: ${(props) => (props.active ? " var(--color-brand-50)" : "inherit")};

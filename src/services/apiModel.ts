@@ -55,3 +55,8 @@ export interface IBooking {
   cabins: IBookingCabin;
   guests: IBookingGuest;
 }
+
+export interface IGetBookings {
+  data: IBooking[];
+  count: number;
+}
