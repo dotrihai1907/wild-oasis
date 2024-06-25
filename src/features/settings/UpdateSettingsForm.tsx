@@ -6,11 +6,11 @@ import { useSettings } from "./useSettings";
 import { useUpdateSetting } from "./useUpdateSetting";
 
 function UpdateSettingsForm() {
-  const { isLoading, settings } = useSettings();
+  const { isLoadingSettings, settings } = useSettings();
 
   const { isUpdating, updateAction } = useUpdateSetting();
 
-  if (isLoading) return <Spinner />;
+  if (isLoadingSettings) return <Spinner />;
 
   const handleUpdate = (
     e: React.FocusEvent<HTMLInputElement, Element>,

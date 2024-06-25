@@ -62,6 +62,5 @@ export interface IGuest {
 }
 
 export interface IUpdateBooking {
-  status: string;
-  isPaid: boolean;
+  [key: string]: string | number | boolean;
 }
