@@ -26,16 +26,6 @@ export interface ISettings {
 export interface IUpdateSetting {
   [key: string]: string;
 }
-
-export interface IBookingCabin {
-  name: string;
-}
-
-export interface IBookingGuest {
-  email: string;
-  fullName: string;
-}
-
 export interface IBooking {
   id: number;
   createdAt: string;
@@ -52,11 +42,21 @@ export interface IBooking {
   observations: string;
   cabinId: number;
   guestId: number;
-  cabins: IBookingCabin;
-  guests: IBookingGuest;
+  cabins: ICabin;
+  guests: IGuest;
 }
 
 export interface IGetBookings {
   data: IBooking[];
   count: number;
+}
+
+export interface IGuest {
+  id: number;
+  createdAt: string;
+  fullName: string;
+  email: string;
+  nationalId: string;
+  nationality: string;
+  countryFlag: string;
 }

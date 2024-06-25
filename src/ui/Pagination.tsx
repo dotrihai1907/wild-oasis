@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { ROW_PER_PAGE } from "../utils/constants";
 
 type PaginationButtonProps = {
-  active: boolean;
+  active?: boolean;
 };
 
 type PaginationProps = {
@@ -45,17 +45,12 @@ const Pagination = ({ count }: PaginationProps) => {
       </P>
 
       <Buttons>
-        <PaginationButton
-          disabled={currentPage === 1}
-          active
-          onClick={prevPage}
-        >
+        <PaginationButton disabled={currentPage === 1} onClick={prevPage}>
           <HiChevronLeft /> <span>Previous</span>
         </PaginationButton>
 
         <PaginationButton
           disabled={currentPage === pageCount}
-          active
           onClick={nextPage}
         >
           <HiChevronRight /> <span>Next</span>

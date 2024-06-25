@@ -4,12 +4,10 @@ import { IBooking } from "../../services/apiModel";
 import Table from "../../ui/Table";
 import Tag from "../../ui/Tag";
 import { formatCurrency, formatDistanceFromNow } from "../../utils/helpers";
-
-const STATUS_TAGNAME = {
-  unconfirmed: "blue",
-  "checked-in": "green",
-  "checked-out": "silver",
-};
+import Menus from "../../ui/Menus";
+import { HiEye } from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
+import { STATUS_TAGNAME } from "../../utils/constants";
 
 type BookingRowProps = {
   booking: IBooking;
@@ -17,6 +15,7 @@ type BookingRowProps = {
 
 const BookingRow = ({ booking }: BookingRowProps) => {
   const {
+    id: bookingId,
     startDate,
     endDate,
     numNights,
@@ -25,6 +24,8 @@ const BookingRow = ({ booking }: BookingRowProps) => {
     guests: { fullName: guestName, email },
     cabins: { name: cabinName },
   } = booking;
+  const navigate = useNavigate();
+
   return (
     <Table.Row>
       <Cabin>{cabinName}</Cabin>
@@ -50,6 +51,18 @@ const BookingRow = ({ booking }: BookingRowProps) => {
       <Tag type={STATUS_TAGNAME[status]}>{status.replace("-", " ")}</Tag>
 
       <Amount>{formatCurrency(totalPrice)}</Amount>
+
+      <Menus.Menu>
+        <Menus.Toogle id={bookingId} />
+        <Menus.List id={bookingId}>
+          <Menus.Button
+            icon={<HiEye />}
+            onClick={() => navigate(`/bookings/${bookingId}`)}
+          >
+            See details
+          </Menus.Button>
+        </Menus.List>
+      </Menus.Menu>
     </Table.Row>
   );
 };

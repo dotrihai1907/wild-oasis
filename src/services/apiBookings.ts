@@ -1,6 +1,6 @@
 import { ROW_PER_PAGE } from "../utils/constants";
 import { getToday } from "../utils/helpers";
-import { IGetBookings } from "./apiModel";
+import { IBooking, IGetBookings } from "./apiModel";
 import supabase from "./supabase";
 
 type BookingProps = {
@@ -27,8 +27,6 @@ export const getBookings = async ({ filter, sortBy, page }: BookingProps) => {
   const from = (page - 1) * ROW_PER_PAGE;
   const to = from + ROW_PER_PAGE - 1;
 
-  console.log(from, to, page);
-
   query = query
     .order(sortBy.field, { ascending: sortBy.direction === "asc" })
     .range(from, to);
@@ -48,11 +46,10 @@ export const getBooking = async (id: number) => {
     .single();
 
   if (error) {
-    console.error(error);
     throw new Error("Booking not found");
   }
 
-  return data;
+  return data as IBooking;
 };
 
 export async function getBookingsAfterDate(date: string) {
