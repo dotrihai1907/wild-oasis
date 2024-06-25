@@ -75,7 +75,7 @@ const CabinRow = ({ cabin }: CabinRowType) => {
 
             <Modal.Window name="delete">
               <ConfirmDelete
-                resourceName={`cabin ${name}`}
+                resourceName="cabin"
                 disabled={isDeleting}
                 onConfirm={() => deleteAction(cabinId)}
               />
