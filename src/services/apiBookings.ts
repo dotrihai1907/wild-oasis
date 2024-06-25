@@ -1,6 +1,6 @@
 import { ROW_PER_PAGE } from "../utils/constants";
 import { getToday } from "../utils/helpers";
-import { IBooking, IGetBookings } from "./apiModel";
+import { IBooking, IGetBookings, IUpdateBooking } from "./apiModel";
 import supabase from "./supabase";
 
 type BookingProps = {
@@ -105,22 +105,21 @@ export async function getStaysTodayActivity() {
   return data;
 }
 
-export async function updateBooking(id, obj) {
+export const updateBooking = async (id: number, booking: IUpdateBooking) => {
   const { data, error } = await supabase
     .from("bookings")
-    .update(obj)
+    .update(booking)
     .eq("id", id)
     .select()
     .single();
 
   if (error) {
-    console.error(error);
     throw new Error("Booking could not be updated");
   }
-  return data;
-}
+  return data as IBooking;
+};
 
-export async function deleteBooking(id) {
+export async function deleteBooking(id: number) {
   // REMEMBER RLS POLICIES
   const { data, error } = await supabase.from("bookings").delete().eq("id", id);
 

@@ -5,7 +5,7 @@ import Table from "../../ui/Table";
 import Tag from "../../ui/Tag";
 import { formatCurrency, formatDistanceFromNow } from "../../utils/helpers";
 import Menus from "../../ui/Menus";
-import { HiEye } from "react-icons/hi2";
+import { HiArrowDownOnSquare, HiEye } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import { STATUS_TAGNAME } from "../../utils/constants";
 
@@ -61,6 +61,15 @@ const BookingRow = ({ booking }: BookingRowProps) => {
           >
             See details
           </Menus.Button>
+
+          {status === "unconfirmed" && (
+            <Menus.Button
+              icon={<HiArrowDownOnSquare />}
+              onClick={() => navigate(`/checkin/${bookingId}`)}
+            >
+              Check in
+            </Menus.Button>
+          )}
         </Menus.List>
       </Menus.Menu>
     </Table.Row>

@@ -60,3 +60,8 @@ export interface IGuest {
   nationality: string;
   countryFlag: string;
 }
+
+export interface IUpdateBooking {
+  status: string;
+  isPaid: boolean;
+}
