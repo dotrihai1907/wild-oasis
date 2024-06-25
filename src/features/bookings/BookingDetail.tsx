@@ -11,9 +11,11 @@ import Tag from "../../ui/Tag";
 import { STATUS_TAGNAME } from "../../utils/constants";
 import BookingDataBox from "./BookingDataBox";
 import { useBooking } from "./useBooking";
+import { useCheckout } from "../check-in-out/useCheckout";
 
 const BookingDetail = () => {
   const { booking, isLoading } = useBooking();
+  const { checkout, isCheckingOut } = useCheckout();
   const moveBack = useMoveBack();
   const navigate = useNavigate();
 
@@ -35,8 +37,14 @@ const BookingDetail = () => {
 
       <ButtonGroup>
         {booking?.status === "unconfirmed" && (
-          <Button onClick={() => navigate(`/checkin/${booking?.id}`)}>
+          <Button onClick={() => navigate(`/checkin/${booking.id}`)}>
             Check in
+          </Button>
+        )}
+
+        {booking?.status === "checked-in" && (
+          <Button disabled={isCheckingOut} onClick={() => checkout(booking.id)}>
+            Check out
           </Button>
         )}
 

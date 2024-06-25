@@ -1,4 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import {
+  InvalidateQueryFilters,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { updateBooking } from "../../services/apiBookings";
@@ -11,6 +15,7 @@ type UpdateBookingProps = {
 
 export const useCheckin = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { mutate: checkin, isPending: isCheckingIn } = useMutation({
     mutationFn: ({ bookingId, breakfast }: UpdateBookingProps) =>
@@ -21,6 +26,8 @@ export const useCheckin = () => {
       }),
     onSuccess: (data: IBooking) => {
       toast.success(`Booking #${data.id} successfully checked in`);
+      queryClient.invalidateQueries({ active: true } as InvalidateQueryFilters);
+
       navigate("/");
     },
     onError: () => toast.error("There was an error while checking in"),

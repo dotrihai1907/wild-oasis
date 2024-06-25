@@ -5,9 +5,10 @@ import Table from "../../ui/Table";
 import Tag from "../../ui/Tag";
 import { formatCurrency, formatDistanceFromNow } from "../../utils/helpers";
 import Menus from "../../ui/Menus";
-import { HiArrowDownOnSquare, HiEye } from "react-icons/hi2";
+import { HiArrowDownOnSquare, HiArrowUpOnSquare, HiEye } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import { STATUS_TAGNAME } from "../../utils/constants";
+import { useCheckout } from "../check-in-out/useCheckout";
 
 type BookingRowProps = {
   booking: IBooking;
@@ -25,6 +26,7 @@ const BookingRow = ({ booking }: BookingRowProps) => {
     cabins: { name: cabinName },
   } = booking;
   const navigate = useNavigate();
+  const { checkout, isCheckingOut } = useCheckout();
 
   return (
     <Table.Row>
@@ -68,6 +70,16 @@ const BookingRow = ({ booking }: BookingRowProps) => {
               onClick={() => navigate(`/checkin/${bookingId}`)}
             >
               Check in
+            </Menus.Button>
+          )}
+
+          {status === "checked-in" && (
+            <Menus.Button
+              disabled={isCheckingOut}
+              icon={<HiArrowUpOnSquare />}
+              onClick={() => checkout(bookingId)}
+            >
+              Check out
             </Menus.Button>
           )}
         </Menus.List>
