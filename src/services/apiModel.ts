@@ -64,3 +64,12 @@ export interface IGuest {
 export interface IUpdateBooking {
   [key: string]: string | number | boolean;
 }
+
+export interface ISignup {
+  fullName: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+}
+
+export interface ICreateSignup extends Omit<ISignup, "passwordConfirm"> {}

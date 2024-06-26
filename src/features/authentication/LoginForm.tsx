@@ -23,7 +23,7 @@ const LoginForm = () => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FormRowVertical label="Email address" error="">
+      <FormRowVertical label="Email address">
         <Input
           id="email"
           type="email"
@@ -34,7 +34,7 @@ const LoginForm = () => {
         />
       </FormRowVertical>
 
-      <FormRowVertical label="Password" error="">
+      <FormRowVertical label="Password">
         <Input
           id="password"
           type="password"
@@ -45,7 +45,7 @@ const LoginForm = () => {
         />
       </FormRowVertical>
 
-      <FormRowVertical label="" error="">
+      <FormRowVertical label="">
         <Button size="large" disabled={isLoading}>
           {!isLoading ? "Login in" : <SpinnerMini />}
         </Button>

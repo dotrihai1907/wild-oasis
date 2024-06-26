@@ -123,7 +123,12 @@ const EditCabinForm = ({ editCabin, onClose }: EditCabinFormProps) => {
       </FormRow>
 
       <FormRow>
-        <Button variation="secondary" type="reset" onClick={onClose}>
+        <Button
+          variation="secondary"
+          type="reset"
+          onClick={onClose}
+          disabled={isEditing}
+        >
           Cancel
         </Button>
         <Button disabled={isEditing}>Edit cabin</Button>

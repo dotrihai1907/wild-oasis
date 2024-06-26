@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 type FormRowVerticalProps = {
   label: string;
-  error: string;
+  error?: string;
   children: React.ReactElement;
 };
 

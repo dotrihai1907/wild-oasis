@@ -120,7 +120,12 @@ const CreateCabinForm = ({ onClose }: CreateCabinFormProps) => {
       </FormRow>
 
       <FormRow>
-        <Button variation="secondary" type="reset" onClick={onClose}>
+        <Button
+          variation="secondary"
+          type="reset"
+          onClick={onClose}
+          disabled={isCreating}
+        >
           Cancel
         </Button>
         <Button disabled={isCreating}>Create new cabin</Button>
