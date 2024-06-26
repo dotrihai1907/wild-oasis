@@ -3,39 +3,55 @@ import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import FormRowVertical from "../../ui/FormRowVertical";
 import Input from "../../ui/Input";
+import { useLogin } from "./useLogin";
+import SpinnerMini from "../../ui/SpinnerMini";
+import { ACCOUNT_DATA } from "../../utils/constants";
 
-function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const { EMAIL, PASSWORD } = ACCOUNT_DATA;
 
-  function handleSubmit() {}
+const LoginForm = () => {
+  const { isLoading, loginAction } = useLogin();
+
+  const [email, setEmail] = useState<string>(EMAIL);
+  const [password, setPassword] = useState<string>(PASSWORD);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    loginAction({ email, password });
+  };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FormRowVertical label="Email address">
+      <FormRowVertical label="Email address" error="">
         <Input
-          type="email"
           id="email"
-          // This makes this form better for password managers
-          autoComplete="username"
+          type="email"
           value={email}
+          disabled={isLoading}
+          autoComplete="username"
           onChange={(e) => setEmail(e.target.value)}
         />
       </FormRowVertical>
-      <FormRowVertical label="Password">
+
+      <FormRowVertical label="Password" error="">
         <Input
-          type="password"
           id="password"
-          autoComplete="current-password"
+          type="password"
           value={password}
+          disabled={isLoading}
+          autoComplete="current-password"
           onChange={(e) => setPassword(e.target.value)}
         />
       </FormRowVertical>
-      <FormRowVertical>
-        <Button size="large">Login</Button>
+
+      <FormRowVertical label="" error="">
+        <Button size="large" disabled={isLoading}>
+          {!isLoading ? "Login in" : <SpinnerMini />}
+        </Button>
       </FormRowVertical>
     </Form>
   );
-}
+};
 
 export default LoginForm;

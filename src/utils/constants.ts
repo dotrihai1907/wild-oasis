@@ -5,3 +5,8 @@ export const STATUS_TAGNAME = {
   "checked-in": "green",
   "checked-out": "silver",
 };
+
+export const ACCOUNT_DATA = {
+  EMAIL: "harry@example.com",
+  PASSWORD: "123qwerty",
+};
