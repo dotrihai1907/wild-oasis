@@ -1,11 +1,7 @@
-import {
-  QueryFilters,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { login } from "../../services/apiAuth";
-import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../services/apiAuth";
 
 type LoginProps = {
   email: string;
@@ -19,8 +15,8 @@ export const useLogin = () => {
   const { mutate: loginAction, isPending: isLoading } = useMutation({
     mutationFn: (props: LoginProps) => login(props),
     onSuccess: (user) => {
-      queryClient.setQueriesData(["user"] as QueryFilters, user.user);
-      navigate("/dashboard");
+      queryClient.setQueryData(["user"], user.user);
+      navigate("/dashboard", { replace: true });
       toast.success("Successfully logged in");
     },
     onError: () => toast.error("Provided email or password are invalid"),
