@@ -1,4 +1,24 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useUser } from "./useUser";
+
+const UserAvatar = () => {
+  const { user } = useUser();
+  const navigate = useNavigate();
+
+  return (
+    <StyledUserAvatar>
+      <Avatar
+        onClick={() => navigate("/account")}
+        src={user?.user_metadata.avatar || "default-user.jpg"}
+        alt={`Avatar of ${user?.user_metadata.fullName}`}
+      />
+      <span>{user?.user_metadata.fullName}</span>
+    </StyledUserAvatar>
+  );
+};
+
+export default UserAvatar;
 
 const StyledUserAvatar = styled.div`
   display: flex;
@@ -18,4 +38,11 @@ const Avatar = styled.img`
   object-position: center;
   border-radius: 50%;
   outline: 2px solid var(--color-grey-100);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: var(--color-grey-100);
+    opacity: 0.8;
+  }
 `;

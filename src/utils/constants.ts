@@ -7,6 +7,6 @@ export const STATUS_TAGNAME = {
 };
 
 export const ACCOUNT_DATA = {
-  EMAIL: "harry@example.com",
+  EMAIL: "james@ex.com",
   PASSWORD: "123qwerty",
 };
