@@ -1,9 +1,15 @@
 import styled from "styled-components";
+import { useChangeMode } from "../context/ModeContext";
 
 function Logo() {
+  const { isDarkMode } = useChangeMode();
+
   return (
     <StyledLogo>
-      <StyledImage src="/logo-light.png" alt="Logo" />
+      <StyledImage
+        src={isDarkMode ? "/logo-dark.png" : "/logo-light.png"}
+        alt="Logo"
+      />
     </StyledLogo>
   );
 }
