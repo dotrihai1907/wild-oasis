@@ -75,3 +75,6 @@ export interface ISignup {
 export interface ICreateSignup extends Omit<ISignup, "passwordConfirm"> {}
 
 export interface IUpdatePassword extends Omit<ISignup, "fullName" | "email"> {}
+
+export interface IBookingsAfterDate
+  extends Pick<IBooking, "createdAt" | "totalPrice" | "extraPrice"> {}
